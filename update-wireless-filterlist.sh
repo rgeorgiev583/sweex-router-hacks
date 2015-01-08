@@ -74,13 +74,13 @@ fi
 
 while read -r mac desc; do
     if [ -z $SILENT ]; then
-        curl http://$USER:$PASS@$IP/wire_filter_mac_set.cgi \
-                -d add_mac=en -d mac_address=$mac -d submitbutton=Add \
-                -d FilterMode=Off -d mac_describe="$desc"
+        curl http://$IP/wire_filter_mac_set.cgi  -u $USER:$PASS  \
+                -d add_mac=en      -d mac_address=$mac  \
+                -d FilterMode=Off  -d mac_describe="$desc"
     else
-        curl http://$USER:$PASS@$IP/wire_filter_mac_set.cgi \
-                -d add_mac=en -d mac_address=$mac -d submitbutton=Add \
-                -d FilterMode=Off -d mac_describe="$desc" -s
+        curl -s http://$IP/wire_filter_mac_set.cgi  -u $USER:$PASS  \
+                -d add_mac=en      -d mac_address=$mac  \
+                -d FilterMode=Off  -d mac_describe="$desc"
     fi
 
     if [ -n $VERBOSE ]; then
@@ -92,8 +92,8 @@ if [ -n $VERBOSE ]; then
     echo "Done adding MAC addresses."
 fi
 
-curl http://$USER:$PASS@$IP/wire_filter_mac_set.cgi \
-        -d FilterMode=Allow -d enable_filter=2 -d submitbutton=Apply
+curl http://$IP/wire_filter_mac_set.cgi  -u $USER:$PASS \
+        -d FilterMode=Allow  -d enable_filter=2
 
 if [ -n $VERBOSE ]; then
     echo "Whitelisted said addresses and enabled Wireless Access Control successfully."
