@@ -64,6 +64,8 @@ if [ -z $IP ] || [ -z $USER ] || [ -z $PASS ]; then
     fi
 fi
 
+WKEY=$(<"$WKEY_FILENAME")
+
 if [ -n $VERBOSE ]; then
     echo 'Sweex router wireless security automatic enable utility'
     echo '(tested on the Sweex LW055 model)'
@@ -74,16 +76,16 @@ fi
 
 if [ -z $SILENT ]; then
     curl http://$IP/wirel_sec_set.cgi  -u $USER:$PASS  \
-        -d wpaMode=WPA_WPA2_Mixed          -d wpaAuthMethod=pre_shared_keys   \
-        -d wpaCipherSuite=AES              -d wpa2CipherSuite=AES             \
-        -d wpaPhrase=$(<"$WKEY_FILENAME")  -d wpa2Phrase=$(<"$WKEY_FILENAME") \
-        -d wpaGrpReKeyTime=86400
+            -d wpaMode=WPA_WPA2_Mixed  -d wpaAuthMethod=pre_shared_keys  \
+            -d wpaCipherSuite=AES      -d wpa2CipherSuite=AES            \
+            -d wpaPhrase=$WKEY         -d wpa2Phrase=$WKEY               \
+            -d wpaGrpReKeyTime=86400
 else
     curl -s http://$IP/wirel_sec_set.cgi  -u $USER:$PASS  \
-        -d wpaMode=WPA_WPA2_Mixed          -d wpaAuthMethod=pre_shared_keys   \
-        -d wpaCipherSuite=AES              -d wpa2CipherSuite=AES             \
-        -d wpaPhrase=$(<"$WKEY_FILENAME")  -d wpa2Phrase=$(<"$WKEY_FILENAME") \
-        -d wpaGrpReKeyTime=86400
+            -d wpaMode=WPA_WPA2_Mixed  -d wpaAuthMethod=pre_shared_keys  \
+            -d wpaCipherSuite=AES      -d wpa2CipherSuite=AES            \
+            -d wpaPhrase=$WKEY         -d wpa2Phrase=$WKEY               \
+            -d wpaGrpReKeyTime=86400
 fi
 
 if [ -n $VERBOSE ]; then
