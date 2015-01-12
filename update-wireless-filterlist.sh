@@ -3,7 +3,7 @@
 while getopts 'a:d:f:p:su:v' opt; do
     case $opt in
         a)
-            IP=$OPTARG
+            ip=$OPTARG
             ;;
         d)
             MACTAB_FILENAME="$OPTARG"
@@ -12,13 +12,13 @@ while getopts 'a:d:f:p:su:v' opt; do
             AUTH_FILENAME="$OPTARG"
             ;;
         p)
-            PASS=$OPTARG
+            pass=$OPTARG
             ;;
         s)
             SILENT=1
             ;;
         u)
-            USER=$OPTARG
+            user=$OPTARG
             ;;
         v)
             VERBOSE=1
@@ -28,39 +28,39 @@ done
 
 shift $((OPTIND - 1))
 
-if [ -z $IP ]; then
-    IP=$1
+if [ -z $ip ]; then
+    ip=$1
 fi
 
-if [ -z $USER ]; then
-    USER=$2
+if [ -z $user ]; then
+    user=$2
 fi
 
-if [ -z $PASS ]; then
-    PASS=$3
+if [ -z $pass ]; then
+    pass=$3
 fi
 
 if [ -z "$MACTAB_FILENAME" ]; then
     MACTAB_FILENAME=mactab
 fi
 
-if [ -z $IP ] || [ -z $USER ] || [ -z $PASS ]; then
+if [ -z $ip ] || [ -z $user ] || [ -z $pass ]; then
     if [ -z "$AUTH_FILENAME" ]; then
         AUTH_FILENAME=auth
     fi
 
-    read -r F_IP F_USER F_PASS < "$AUTH_FILENAME"
+    read -r F_ip F_user F_pass < "$AUTH_FILENAME"
 
-    if [ -n $F_IP ] && [ -z $IP ]; then
-        IP=$F_IP
+    if [ -n $F_ip ] && [ -z $ip ]; then
+        ip=$F_ip
     fi
 
-    if [ -n $F_USER ] && [ -z $USER ]; then
-        USER=$F_USER
+    if [ -n $F_user ] && [ -z $user ]; then
+        user=$F_user
     fi
 
-    if [ -n $F_PASS ] && [ -z $PASS ]; then
-        PASS=$F_PASS
+    if [ -n $F_pass ] && [ -z $pass ]; then
+        pass=$F_pass
     fi
 fi
 
@@ -69,16 +69,16 @@ if [ -n $VERBOSE ]; then
     echo '(tested on the Sweex LW055 model)'
     echo
     echo 'Beginning update.'
-    echo "Connected to $IP with authentication as $USER."
+    echo "Connected to $ip with authentication as $user."
 fi
 
 while read -r mac desc; do
     if [ -z $SILENT ]; then
-        curl http://$IP/wire_filter_mac_set.cgi  -u $USER:$PASS  \
+        curl http://$ip/wire_filter_mac_set.cgi  -u $user:$pass  \
                 -d add_mac=en      -d mac_address=$mac  \
                 -d FilterMode=Off  -d mac_describe="$desc"
     else
-        curl -s http://$IP/wire_filter_mac_set.cgi  -u $USER:$PASS  \
+        curl -s http://$ip/wire_filter_mac_set.cgi  -u $user:$pass  \
                 -d add_mac=en      -d mac_address=$mac  \
                 -d FilterMode=Off  -d mac_describe="$desc"
     fi
@@ -92,7 +92,7 @@ if [ -n $VERBOSE ]; then
     echo "Done adding MAC addresses."
 fi
 
-curl http://$IP/wire_filter_mac_set.cgi  -u $USER:$PASS \
+curl http://$ip/wire_filter_mac_set.cgi  -u $user:$pass \
         -d FilterMode=Allow  -d enable_filter=2
 
 if [ -n $VERBOSE ]; then
